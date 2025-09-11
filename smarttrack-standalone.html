@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartTrack - Employee Attendance Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .page {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Login Page Styles */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-section {
+            background: #8fb996;
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .logo i {
+            font-size: 28px;
+        }
+
+        .login-form-section {
+            padding: 40px 30px;
+        }
+
+        .login-form-section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #8fb996;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(143, 185, 150, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background: #8fb996;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary:hover {
+            background: #7da085;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(143, 185, 150, 0.3);
+        }
+
+        .language-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .lang-btn {
+            padding: 8px 16px;
+            border: 2px solid #e1e5e9;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn.active,
+        .lang-btn:hover {
+            border-color: #8fb996;
+            background: #8fb996;
+            color: white;
+        }
+
+        /* Dashboard Styles */
+        .dashboard-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: #f5f7fa;
+        }
+
+        .dashboard-header {
+            background: white;
+            padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-left .logo {
+            color: #8fb996;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .user-role {
+            background: #8fb996;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #666;
+        }
+
+        .logout-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #ff3742;
+            transform: translateY(-1px);
+        }
+
+        .welcome-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin: 30px;
+            text-align: center;
+        }
+
+        .welcome-card h2 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: #2c3e50;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .check-in-btn {
+            background: #27ae60;
+            color: white;
+        }
+
+        .check-out-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 30px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 15px;
+            }
+            
+            .login-form-section {
+                padding: 25px 20px;
+            }
+            
+            .dashboard-header {
+                padding: 15px 20px;
+            }
+            
+            .welcome-card {
+                margin: 20px;
+                padding: 20px;
+            }
+            
+            .quick-actions {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        [dir="rtl"] {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Login Page -->
+        <div id="login-page" class="page active">
+            <div class="login-container">
+                <div class="login-card">
+                    <div class="logo-section">
+                        <div class="logo">
+                            <i class="fas fa-check-circle"></i>
+                            <span>SMARTTRACK</span>
+                        </div>
+                    </div>
+                    
+                    <div class="login-form-section">
+                        <h2 data-translate="login">Login</h2>
+                        
+                        <form class="login-form">
+                            <div class="form-group">
+                                <label data-translate="employee_id">Employee ID</label>
+                                <input type="text" id="employeeId" placeholder="Enter your ID" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label data-translate="password">Password</label>
+                                <input type="password" id="password" placeholder="Enter your password" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label data-translate="property">Property</label>
+                                <select id="property" required>
+                                    <option value="">Select Property</option>
+                                    <option value="main-office">Main Office</option>
+                                    <option value="branch-1">Branch 1</option>
+                                    <option value="branch-2">Branch 2</option>
+                                </select>
+                            </div>
+                            
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="rememberMe">
+                                <label for="rememberMe" data-translate="remember_me">Remember me</label>
+                            </div>
+                            
+                            <button type="submit" class="btn-primary" data-translate="log_in">Log In</button>
+                        </form>
+                        
+                        <div class="language-selector">
+                            <button class="lang-btn active" data-lang="en">EN</button>
+                            <button class="lang-btn" data-lang="ar">AR</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Employee Dashboard -->
+        <div id="employee-dashboard" class="page">
+            <div class="dashboard-container">
+                <header class="dashboard-header">
+                    <div class="header-left">
+                        <div class="logo">
+                            <i class="fas fa-check-circle"></i>
+                            <span>SMARTTRACK</span>
+                        </div>
+                        <div class="user-role">Employee</div>
+                    </div>
+                    <div class="header-right">
+                        <div class="user-info">
+                            <i class="fas fa-user"></i>
+                            <span data-translate="welcome">Welcome, John Doe</span>
+                        </div>
+                        <button class="logout-btn" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </header>
+
+                <div class="welcome-card">
+                    <h2 data-translate="welcome">Welcome, John Doe</h2>
+                    <div class="quick-actions">
+                        <button class="action-btn check-in-btn" onclick="checkIn()">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span data-translate="check_in">CHECK IN</span>
+                        </button>
+                        <button class="action-btn check-out-btn" onclick="checkOut()">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span data-translate="check_out">CHECK OUT</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Multi-language translations
+        const translations = {
+            en: {
+                login: "Login",
+                employee_id: "Employee ID",
+                password: "Password",
+                property: "Property",
+                remember_me: "Remember me",
+                log_in: "Log In",
+                welcome: "Welcome, John Doe",
+                check_in: "CHECK IN",
+                check_out: "CHECK OUT",
+                success_login: "Login successful",
+                error_login: "Invalid credentials",
+                success_checkin: "Checked in successfully",
+                success_checkout: "Checked out successfully",
+                error_location: "Location access required for check-in/out"
+            },
+            ar: {
+                login: "تسجيل الدخول",
+                employee_id: "رقم الموظف",
+                password: "كلمة المرور",
+                property: "الممتلكات",
+                remember_me: "تذكرني",
+                log_in: "دخول",
+                welcome: "مرحباً، جون دو",
+                check_in: "تسجيل الحضور",
+                check_out: "تسجيل الانصراف",
+                success_login: "تم تسجيل الدخول بنجاح",
+                error_login: "بيانات اعتماد غير صحيحة",
+                success_checkin: "تم تسجيل الحضور بنجاح",
+                success_checkout: "تم تسجيل الانصراف بنجاح",
+                error_location: "مطلوب الوصول للموقع لتسجيل الحضور/الانصراف"
+            }
+        };
+
+        let currentLanguage = 'en';
+        let currentUser = null;
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            bindEvents();
+            checkSavedCredentials();
+        });
+
+        function bindEvents() {
+            // Login form
+            const loginForm = document.querySelector('.login-form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', handleLogin);
+            }
+
+            // Language buttons
+            const langButtons = document.querySelectorAll('.lang-btn');
+            langButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+                    setLanguage(lang);
+                });
+            });
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            const employeeId = document.getElementById('employeeId').value;
+            const password = document.getElementById('password').value;
+            const property = document.getElementById('property').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+
+            // Mock authentication
+            if (authenticateUser(employeeId, password, property)) {
+                if (rememberMe) {
+                    localStorage.setItem('smarttrack-credentials', JSON.stringify({
+                        employeeId,
+                        property
+                    }));
+                }
+
+                currentUser = {
+                    id: employeeId,
+                    name: getUserName(employeeId),
+                    property: property
+                };
+
+                showDashboard();
+                showMessage(t('success_login'), 'success');
+            } else {
+                showMessage(t('error_login'), 'error');
+            }
+        }
+
+        function authenticateUser(employeeId, password, property) {
+            const validUsers = {
+                'EMP001': { password: 'password123', name: 'John Doe' },
+                'ADMIN001': { password: 'admin123', name: 'Administrator' },
+                'MGR001': { password: 'manager123', name: 'Property Manager' }
+            };
+
+            return validUsers[employeeId] && validUsers[employeeId].password === password && property;
+        }
+
+        function getUserName(employeeId) {
+            const users = {
+                'EMP001': 'John Doe',
+                'ADMIN001': 'Administrator',
+                'MGR001': 'Property Manager'
+            };
+            return users[employeeId] || 'User';
+        }
+
+        function showDashboard() {
+            document.getElementById('login-page').classList.remove('active');
+            document.getElementById('employee-dashboard').classList.add('active');
+            updateUserInfo();
+        }
+
+        function updateUserInfo() {
+            if (!currentUser) return;
+
+            const userInfoElements = document.querySelectorAll('.user-info span');
+            userInfoElements.forEach(el => {
+                if (currentLanguage === 'ar') {
+                    el.textContent = `مرحباً، ${currentUser.name}`;
+                } else {
+                    el.textContent = `Welcome, ${currentUser.name}`;
+                }
+            });
+
+            const welcomeElements = document.querySelectorAll('[data-translate="welcome"]');
+            welcomeElements.forEach(el => {
+                if (currentLanguage === 'ar') {
+                    el.textContent = `مرحباً، ${currentUser.name}`;
+                } else {
+                    el.textContent = `Welcome, ${currentUser.name}`;
+                }
+            });
+        }
+
+        function checkSavedCredentials() {
+            const saved = localStorage.getItem('smarttrack-credentials');
+            if (saved) {
+                try {
+                    const credentials = JSON.parse(saved);
+                    document.getElementById('employeeId').value = credentials.employeeId;
+                    document.getElementById('property').value = credentials.property;
+                    document.getElementById('rememberMe').checked = true;
+                } catch (e) {
+                    localStorage.removeItem('smarttrack-credentials');
+                }
+            }
+        }
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update HTML direction
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.documentElement.lang = lang;
+            
+            // Update all translatable elements
+            updateTranslations();
+            updateLanguageButtons();
+        }
+
+        function updateTranslations() {
+            const elements = document.querySelectorAll('[data-translate]');
+            
+            elements.forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    if (element.tagName === 'INPUT' && element.type !== 'submit') {
+                        element.placeholder = translations[currentLanguage][key];
+                    } else {
+                        element.textContent = translations[currentLanguage][key];
+                    }
+                }
+            });
+        }
+
+        function updateLanguageButtons() {
+            const langButtons = document.querySelectorAll('.lang-btn');
+            
+            langButtons.forEach(btn => {
+                const lang = btn.getAttribute('data-lang');
+                btn.classList.toggle('active', lang === currentLanguage);
+            });
+        }
+
+        function t(key) {
+            if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                return translations[currentLanguage][key];
+            }
+            return key;
+        }
+
+        function checkIn() {
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        showMessage(t('success_checkin'), 'success');
+                    },
+                    function(error) {
+                        showMessage(t('error_location'), 'error');
+                    }
+                );
+            } else {
+                showMessage(t('error_location'), 'error');
+            }
+        }
+
+        function checkOut() {
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        showMessage(t('success_checkout'), 'success');
+                    },
+                    function(error) {
+                        showMessage(t('error_location'), 'error');
+                    }
+                );
+            } else {
+                showMessage(t('error_location'), 'error');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('employee-dashboard').classList.remove('active');
+            document.getElementById('login-page').classList.add('active');
+            showMessage('Logged out successfully', 'success');
+        }
+
+        function showMessage(message, type = 'info') {
+            // Remove existing messages
+            const existingMessages = document.querySelectorAll('.message');
+            existingMessages.forEach(msg => msg.remove());
+
+            // Create message element
+            const messageEl = document.createElement('div');
+            messageEl.className = `message ${type}`;
+            messageEl.textContent = message;
+
+            // Insert message
+            const container = document.querySelector('.welcome-card') || document.querySelector('.login-form-section');
+            if (container) {
+                container.parentNode.insertBefore(messageEl, container);
+
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    messageEl.remove();
+                }, 5000);
+            }
+        }
+    </script>
+</body>
+</html>
