@@ -1,0 +1,583 @@
+/* Responsive Design for SmartTrack */
+
+/* Large Desktop (1400px and up) */
+@media (min-width: 1400px) {
+    .main-content {
+        padding: 40px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .employee-stats {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Desktop (1200px - 1399px) */
+@media (max-width: 1399px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .employee-stats {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Large Tablet (992px - 1199px) */
+@media (max-width: 1199px) {
+    .sidebar {
+        width: 250px;
+    }
+    
+    .main-content {
+        margin-left: 250px;
+        padding: 25px;
+    }
+    
+    [dir="rtl"] .main-content {
+        margin-left: 0;
+        margin-right: 250px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    
+    .employee-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .quick-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .action-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Tablet (768px - 991px) */
+@media (max-width: 991px) {
+    .dashboard-header {
+        padding: 15px 20px;
+    }
+    
+    .header-left .logo {
+        font-size: 18px;
+    }
+    
+    .mobile-menu-toggle {
+        display: block;
+        order: -1;
+    }
+    
+    .sidebar {
+        transform: translateX(-100%);
+        position: fixed;
+        z-index: 1000;
+        width: 280px;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        background: #2c3e50;
+        transition: transform 0.3s ease;
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    [dir="rtl"] .sidebar {
+        transform: translateX(100%);
+        left: auto;
+        right: 0;
+    }
+    
+    [dir="rtl"] .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+    
+    [dir="rtl"] .main-content {
+        margin-right: 0;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .employee-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .vacation-form .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .summary-item {
+        grid-template-columns: 1fr;
+        gap: 5px;
+        padding: 15px 0;
+    }
+    
+    .summary-item span {
+        display: block;
+    }
+    
+    .summary-item:first-child span {
+        font-weight: 600;
+        color: #8fb996;
+    }
+    
+    table {
+        font-size: 14px;
+    }
+    
+    th, td {
+        padding: 10px 8px;
+    }
+    
+    .welcome-card h2 {
+        font-size: 24px;
+    }
+    
+    .stat-card h3 {
+        font-size: 18px;
+    }
+}
+
+/* Large Mobile (576px - 767px) */
+@media (max-width: 767px) {
+    .login-card {
+        margin: 10px;
+        border-radius: 16px;
+    }
+    
+    .login-form-section {
+        padding: 30px 25px;
+    }
+    
+    .login-form-section h2 {
+        font-size: 24px;
+        margin-bottom: 25px;
+    }
+    
+    .dashboard-header {
+        padding: 12px 15px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .header-left {
+        gap: 15px;
+    }
+    
+    .header-left .logo {
+        font-size: 16px;
+    }
+    
+    .user-role {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    
+    .header-right {
+        gap: 10px;
+    }
+    
+    .user-info {
+        font-size: 14px;
+    }
+    
+    .user-info span {
+        display: none;
+    }
+    
+    .add-property-btn {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+    
+    .main-content {
+        padding: 15px;
+    }
+    
+    .welcome-card {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .welcome-card h2 {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .employee-stats {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .stat-item {
+        padding: 20px;
+    }
+    
+    .stat-number {
+        font-size: 28px;
+    }
+    
+    .stat-card {
+        padding: 20px;
+    }
+    
+    .property-section,
+    .vacation-requests-section {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .nav-item a {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+    
+    .nav-item i {
+        font-size: 16px;
+    }
+    
+    /* Hide table headers and make table responsive */
+    .property-table table,
+    .requests-table table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .property-table thead,
+    .requests-table thead {
+        display: none;
+    }
+    
+    .property-table tbody,
+    .requests-table tbody {
+        display: block;
+    }
+    
+    .property-table tr,
+    .requests-table tr {
+        display: block;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        padding: 15px;
+        background: #f9f9f9;
+    }
+    
+    .property-table td,
+    .requests-table td {
+        display: block;
+        border: none;
+        padding: 5px 0;
+        text-align: left;
+    }
+    
+    .property-table td:before,
+    .requests-table td:before {
+        content: attr(data-label) ": ";
+        font-weight: 600;
+        color: #8fb996;
+        display: inline-block;
+        width: 100px;
+    }
+}
+
+/* Small Mobile (480px - 575px) */
+@media (max-width: 575px) {
+    .login-container {
+        padding: 15px;
+    }
+    
+    .login-card {
+        max-width: 100%;
+    }
+    
+    .logo-section {
+        padding: 25px 15px;
+    }
+    
+    .logo {
+        font-size: 20px;
+    }
+    
+    .login-form-section {
+        padding: 25px 20px;
+    }
+    
+    .form-group input,
+    .form-group select {
+        padding: 12px;
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+    
+    .btn-primary {
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    .language-selector {
+        margin-top: 20px;
+    }
+    
+    .lang-btn {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+    
+    .dashboard-header {
+        padding: 10px;
+    }
+    
+    .header-left .logo span {
+        display: none;
+    }
+    
+    .user-role {
+        display: none;
+    }
+    
+    .main-content {
+        padding: 10px;
+    }
+    
+    .welcome-card {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .welcome-card h2 {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+    
+    .action-btn {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+    
+    .stat-card {
+        padding: 15px;
+    }
+    
+    .stat-card h3 {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+    
+    .property-section,
+    .vacation-requests-section {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .sidebar {
+        width: 100%;
+    }
+    
+    .nav-item a {
+        padding: 15px 20px;
+        justify-content: center;
+    }
+    
+    .nav-item a span {
+        display: none;
+    }
+    
+    .nav-item i {
+        font-size: 20px;
+    }
+}
+
+/* Extra Small Mobile (320px - 479px) */
+@media (max-width: 479px) {
+    .login-container {
+        padding: 10px;
+    }
+    
+    .logo-section {
+        padding: 20px 10px;
+    }
+    
+    .logo {
+        font-size: 18px;
+    }
+    
+    .login-form-section {
+        padding: 20px 15px;
+    }
+    
+    .login-form-section h2 {
+        font-size: 20px;
+    }
+    
+    .main-content {
+        padding: 8px;
+    }
+    
+    .welcome-card,
+    .stat-card,
+    .property-section,
+    .vacation-requests-section {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+    
+    .stat-number {
+        font-size: 24px;
+    }
+    
+    .stat-label {
+        font-size: 12px;
+    }
+    
+    .action-btn {
+        padding: 10px 15px;
+        font-size: 13px;
+    }
+}
+
+/* Landscape Mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+    .login-container {
+        padding: 10px;
+    }
+    
+    .login-card {
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    
+    .logo-section {
+        padding: 15px;
+    }
+    
+    .login-form-section {
+        padding: 20px;
+    }
+    
+    .dashboard-header {
+        position: relative;
+    }
+    
+    .sidebar {
+        height: calc(100vh - 60px);
+        top: 60px;
+    }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .logo i,
+    .nav-item i {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-primary: #1a1a1a;
+        --bg-secondary: #2d2d2d;
+        --text-primary: #ffffff;
+        --text-secondary: #b3b3b3;
+        --border-color: #404040;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .sidebar,
+    .dashboard-header,
+    .action-btn,
+    .btn-primary,
+    .btn-secondary,
+    .mobile-menu-toggle {
+        display: none !important;
+    }
+    
+    .main-content {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .stat-card,
+    .property-section,
+    .vacation-requests-section {
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+        break-inside: avoid;
+    }
+    
+    body {
+        background: white !important;
+        color: black !important;
+    }
+}
+
+/* Focus Visible for Better Accessibility */
+@media (prefers-reduced-motion: no-preference) {
+    .btn-primary,
+    .btn-secondary,
+    .action-btn,
+    .nav-item a {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Container Queries (Future-proofing) */
+@container (max-width: 600px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Hover States for Touch Devices */
+@media (hover: hover) {
+    .stat-card:hover,
+    .action-btn:hover,
+    .btn-primary:hover,
+    .btn-secondary:hover {
+        transform: translateY(-2px);
+    }
+}
+
+@media (hover: none) {
+    .stat-card:hover,
+    .action-btn:hover,
+    .btn-primary:hover,
+    .btn-secondary:hover {
+        transform: none;
+    }
+}
