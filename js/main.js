@@ -58,35 +58,57 @@ class SmartTrackApp {
         window.addEventListener('resize', () => this.handleResize());
     }
 
-    handleLogin(e) {
+    async handleLogin(e) {
         e.preventDefault();
         
-        const formData = new FormData(e.target);
         const employeeId = document.getElementById('employeeId').value;
         const password = document.getElementById('password').value;
         const property = document.getElementById('property').value;
         const rememberMe = document.getElementById('rememberMe').checked;
 
-        // Mock authentication
-        if (this.authenticateUser(employeeId, password, property)) {
-            if (rememberMe) {
-                localStorage.setItem('smarttrack-credentials', JSON.stringify({
+        // Show loading state
+        const submitBtn = e.target.querySelector('.btn-primary');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Logging in...';
+        submitBtn.disabled = true;
+
+        try {
+            // API authentication
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
                     employeeId,
+                    password,
                     property
-                }));
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                if (rememberMe) {
+                    localStorage.setItem('smarttrack-credentials', JSON.stringify({
+                        employeeId,
+                        property
+                    }));
+                }
+
+                this.currentUser = result.user;
+                this.showDashboard();
+                this.showMessage(window.SmartTrackTranslations.t('success_login', 'Login successful'), 'success');
+            } else {
+                this.showMessage(result.message || window.SmartTrackTranslations.t('error_login', 'Invalid credentials'), 'error');
             }
-
-            this.currentUser = {
-                id: employeeId,
-                name: this.getUserName(employeeId),
-                role: this.getUserRole(employeeId),
-                property: property
-            };
-
-            this.showDashboard();
-            this.showMessage(window.SmartTrackTranslations.t('success_login', 'Login successful'), 'success');
-        } else {
-            this.showMessage(window.SmartTrackTranslations.t('error_login', 'Invalid credentials'), 'error');
+        } catch (error) {
+            console.error('Login error:', error);
+            this.showMessage('Network error. Please try again.', 'error');
+        } finally {
+            // Reset button state
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
         }
     }
 
@@ -231,48 +253,83 @@ class SmartTrackApp {
         }
     }
 
-    handleCheckIn() {
+    async handleCheckIn() {
         if (!this.currentLocation) {
             this.showMessage(window.SmartTrackTranslations.t('error_location', 'Location access required'), 'error');
             return;
         }
 
-        // Mock check-in logic
-        const now = new Date();
-        const checkInData = {
-            timestamp: now,
-            location: this.currentLocation,
-            type: 'check-in'
-        };
+        if (!this.currentUser) {
+            this.showMessage('Please login first', 'error');
+            return;
+        }
 
-        // Save to localStorage (in real app, would send to server)
-        this.saveAttendanceRecord(checkInData);
-        
-        this.showMessage(window.SmartTrackTranslations.t('success_checkin', 'Checked in successfully'), 'success');
-        this.updateAttendanceDisplay();
+        try {
+            const response = await fetch('/api/attendance/checkin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    employeeId: this.currentUser.id,
+                    location: this.currentLocation,
+                    timestamp: new Date().toISOString()
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                this.showMessage(window.SmartTrackTranslations.t('success_checkin', 'Checked in successfully'), 'success');
+                this.updateAttendanceDisplay();
+            } else {
+                this.showMessage(result.message || 'Check-in failed', 'error');
+            }
+        } catch (error) {
+            console.error('Check-in error:', error);
+            this.showMessage('Network error. Please try again.', 'error');
+        }
     }
 
-    handleCheckOut() {
+    async handleCheckOut() {
         if (!this.currentLocation) {
             this.showMessage(window.SmartTrackTranslations.t('error_location', 'Location access required'), 'error');
             return;
         }
 
-        // Mock check-out logic
-        const now = new Date();
-        const checkOutData = {
-            timestamp: now,
-            location: this.currentLocation,
-            type: 'check-out'
-        };
+        if (!this.currentUser) {
+            this.showMessage('Please login first', 'error');
+            return;
+        }
 
-        this.saveAttendanceRecord(checkOutData);
-        
-        this.showMessage(window.SmartTrackTranslations.t('success_checkout', 'Checked out successfully'), 'success');
-        this.updateAttendanceDisplay();
+        try {
+            const response = await fetch('/api/attendance/checkout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    employeeId: this.currentUser.id,
+                    location: this.currentLocation,
+                    timestamp: new Date().toISOString()
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                this.showMessage(window.SmartTrackTranslations.t('success_checkout', 'Checked out successfully'), 'success');
+                this.updateAttendanceDisplay();
+            } else {
+                this.showMessage(result.message || 'Check-out failed', 'error');
+            }
+        } catch (error) {
+            console.error('Check-out error:', error);
+            this.showMessage('Network error. Please try again.', 'error');
+        }
     }
 
-    submitVacationRequest() {
+    async submitVacationRequest() {
         const fromDate = document.getElementById('vacationFrom').value;
         const toDate = document.getElementById('vacationTo').value;
 
@@ -286,21 +343,40 @@ class SmartTrackApp {
             return;
         }
 
-        // Mock vacation request
-        const requestData = {
-            fromDate,
-            toDate,
-            status: 'pending',
-            timestamp: new Date()
-        };
+        if (!this.currentUser) {
+            this.showMessage('Please login first', 'error');
+            return;
+        }
 
-        this.saveVacationRequest(requestData);
-        
-        this.showMessage(window.SmartTrackTranslations.t('success_request', 'Request submitted successfully'), 'success');
-        
-        // Clear form
-        document.getElementById('vacationFrom').value = '';
-        document.getElementById('vacationTo').value = '';
+        try {
+            const response = await fetch('/api/vacation/request', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    employeeId: this.currentUser.id,
+                    fromDate,
+                    toDate,
+                    reason: '' // Could add a reason field later
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                this.showMessage(window.SmartTrackTranslations.t('success_request', 'Request submitted successfully'), 'success');
+                
+                // Clear form
+                document.getElementById('vacationFrom').value = '';
+                document.getElementById('vacationTo').value = '';
+            } else {
+                this.showMessage(result.message || 'Request failed', 'error');
+            }
+        } catch (error) {
+            console.error('Vacation request error:', error);
+            this.showMessage('Network error. Please try again.', 'error');
+        }
     }
 
     saveAttendanceRecord(record) {

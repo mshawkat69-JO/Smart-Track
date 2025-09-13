@@ -1,0 +1,45 @@
+{
+  "name": "smarttrack-attendance",
+  "version": "1.0.0",
+  "description": "SmartTrack - Employee Attendance Management System with GPS check-in/out functionality",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "install-deps": "npm install",
+    "setup": "npm install && echo Setup complete! Run 'npm start' to start the server."
+  },
+  "keywords": [
+    "attendance",
+    "employee",
+    "gps",
+    "management",
+    "responsive",
+    "multilingual"
+  ],
+  "author": "SmartTrack Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2",
+    "helmet": "^7.1.0",
+    "compression": "^1.7.4",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/smarttrack/attendance-system"
+  },
+  "bugs": {
+    "url": "https://github.com/smarttrack/attendance-system/issues"
+  },
+  "homepage": "https://smarttrack.com"
+}
