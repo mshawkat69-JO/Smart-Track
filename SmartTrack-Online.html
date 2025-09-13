@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartTrack - Employee Attendance Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .page {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-section {
+            background: #8fb996;
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .logo i {
+            font-size: 28px;
+        }
+
+        .login-form-section {
+            padding: 40px 30px;
+        }
+
+        .login-form-section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #8fb996;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(143, 185, 150, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background: #8fb996;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary:hover {
+            background: #7da085;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(143, 185, 150, 0.3);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .language-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .lang-btn {
+            padding: 8px 16px;
+            border: 2px solid #e1e5e9;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn.active,
+        .lang-btn:hover {
+            border-color: #8fb996;
+            background: #8fb996;
+            color: white;
+        }
+
+        .dashboard-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: #f5f7fa;
+        }
+
+        .dashboard-header {
+            background: white;
+            padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-left .logo {
+            color: #8fb996;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .user-role {
+            background: #8fb996;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #666;
+        }
+
+        .logout-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #ff3742;
+            transform: translateY(-1px);
+        }
+
+        .sidebar {
+            background: #2c3e50;
+            width: 280px;
+            min-height: calc(100vh - 80px);
+            position: fixed;
+            left: 0;
+            top: 80px;
+            z-index: 99;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            margin: 5px 0;
+        }
+
+        .nav-item a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 30px;
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-item a:hover,
+        .nav-item.active a {
+            background: #34495e;
+            color: #8fb996;
+            border-right: 4px solid #8fb996;
+        }
+
+        .nav-item i {
+            font-size: 18px;
+            width: 20px;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            padding: 30px;
+            min-height: calc(100vh - 80px);
+        }
+
+        .welcome-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .welcome-card h2 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: #2c3e50;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .check-in-btn {
+            background: #27ae60;
+            color: white;
+        }
+
+        .check-out-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .stat-card h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            border-bottom: 2px solid #8fb996;
+            padding-bottom: 10px;
+        }
+
+        .vacation-form .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .vacation-form .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .btn-secondary {
+            background: #8fb996;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #7da085;
+            transform: translateY(-1px);
+        }
+
+        .attendance-summary,
+        .request-summary {
+            width: 100%;
+        }
+
+        .summary-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        .summary-item:first-child {
+            font-weight: 600;
+            color: #666;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-present {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            color: #f39c12;
+            font-weight: 600;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .online-banner {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: 500;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .online-banner a {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        .page.active {
+            margin-top: 50px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 991px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 1000;
+                width: 280px;
+                height: 100vh;
+                top: 0;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+                background: none;
+                border: none;
+                font-size: 24px;
+                color: #8fb996;
+                cursor: pointer;
+                padding: 10px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .vacation-form .form-row {
+                flex-direction: column;
+            }
+
+            .quick-actions {
+                flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 15px;
+            }
+            
+            .login-form-section {
+                padding: 25px 20px;
+            }
+            
+            .dashboard-header {
+                padding: 15px 20px;
+            }
+            
+            .welcome-card {
+                padding: 20px;
+            }
+
+            .user-info span {
+                display: none;
+            }
+
+            .page.active {
+                margin-top: 40px;
+            }
+
+            .online-banner {
+                font-size: 14px;
+                padding: 8px;
+            }
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+        }
+
+        /* RTL Support */
+        [dir="rtl"] {
+            text-align: right;
+        }
+
+        [dir="rtl"] .sidebar {
+            left: auto;
+            right: 0;
+        }
+
+        [dir="rtl"] .main-content {
+            margin-left: 0;
+            margin-right: 280px;
+        }
+
+        [dir="rtl"] .nav-item.active a {
+            border-right: none;
+            border-left: 4px solid #8fb996;
+        }
+
+        @media (max-width: 991px) {
+            [dir="rtl"] .sidebar {
+                transform: translateX(100%);
+                left: auto;
+                right: 0;
+            }
+
+            [dir="rtl"] .sidebar.active {
+                transform: translateX(0);
+            }
+
+            [dir="rtl"] .main-content {
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Online Banner -->
+    <div class="online-banner">
+        🌐 SmartTrack Online Demo - No Installation Required! | 
+        <a href="https://codepen.io" target="_blank">Create your own version on CodePen</a>
+    </div>
+
+    <div id="app">
+        <!-- Login Page -->
+        <div id="login-page" class="page active">
+            <div class="login-container">
+                <div class="login-card">
+                    <div class="logo-section">
+                        <div class="logo">
+                            <i class="fas fa-check-circle"></i>
+                            <span>SMARTTRACK</span>
+                        </div>
+                    </div>
+                    
+                    <div class="login-form-section">
+                        <h2 data-translate="login">Login</h2>
+                        
+                        <form class="login-form">
+                            <div class="form-group">
+                                <label data-translate="employee_id">Employee ID</label>
+                                <input type="text" id="employeeId" placeholder="Try: EMP001" value="EMP001" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label data-translate="password">Password</label>
+                                <input type="password" id="password" placeholder="Try: password123" value="password123" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label data-translate="property">Property</label>
+                                <select id="property" required>
+                                    <option value="">Select Property</option>
+                                    <option value="main-office" selected>Main Office</option>
+                                    <option value="branch-1">Branch 1</option>
+                                    <option value="branch-2">Branch 2</option>
+                                </select>
+                            </div>
+                            
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="rememberMe" checked>
+                                <label for="rememberMe" data-translate="remember_me">Remember me</label>
+                            </div>
+                            
+                            <button type="submit" class="btn-primary" data-translate="log_in">Log In</button>
+                        </form>
+                        
+                        <div style="margin-top: 20px; padding: 15px; background: #e8f5e8; border-radius: 8px; font-size: 14px;">
+                            <strong>Demo Credentials:</strong><br>
+                            Employee: EMP001 / password123<br>
+                            Manager: MGR001 / manager123<br>
+                            Admin: ADMIN001 / admin123
+                        </div>
+                        
+                        <div class="language-selector">
+                            <button class="lang-btn active" data-lang="en">EN</button>
+                            <button class="lang-btn" data-lang="ar">AR</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Employee Dashboard -->
+        <div id="employee-dashboard" class="page">
+            <div class="dashboard-container">
+                <header class="dashboard-header">
+                    <div class="header-left">
+                        <button class="mobile-menu-toggle">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <div class="logo">
+                            <i class="fas fa-check-circle"></i>
+                            <span>SMARTTRACK</span>
+                        </div>
+                        <div class="user-role">Employee</div>
+                    </div>
+                    <div class="header-right">
+                        <div class="user-info">
+                            <i class="fas fa-user"></i>
+                            <span data-translate="welcome">Welcome, John Doe</span>
+                        </div>
+                        <button class="logout-btn" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </header>
+
+                <nav class="sidebar">
+                    <ul class="nav-menu">
+                        <li class="nav-item active">
+                            <a href="#" data-section="dashboard">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <span data-translate="dashboard">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" data-section="checkin">
+                                <i class="fas fa-clock"></i>
+                                <span data-translate="check_in">Check In</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" data-section="vacation">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span data-translate="vacation">Vacation</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" data-section="attendance">
+                                <i class="fas fa-history"></i>
+                                <span data-translate="attendance_history">Attendance History</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" data-section="requests">
+                                <i class="fas fa-file-alt"></i>
+                                <span data-translate="request_status">Request Status</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <main class="main-content">
+                    <div class="welcome-card">
+                        <h2 data-translate="welcome">Welcome, John Doe</h2>
+                        <div class="quick-actions">
+                            <button class="action-btn check-in-btn" onclick="checkIn()">
+                                <i class="fas fa-sign-in-alt"></i>
+                                <span data-translate="check_in">CHECK IN</span>
+                            </button>
+                            <button class="action-btn check-out-btn" onclick="checkOut()">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span data-translate="check_out">CHECK OUT</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3 data-translate="vacation_request">Vacation Request</h3>
+                            <div class="vacation-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label data-translate="from">From</label>
+                                        <input type="date" id="vacationFrom">
+                                    </div>
+                                    <div class="form-group">
+                                        <label data-translate="to">To</label>
+                                        <input type="date" id="vacationTo">
+                                    </div>
+                                </div>
+                                <button class="btn-secondary" onclick="submitVacationRequest()">
+                                    <span data-translate="submit_request">Submit Request</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <h3 data-translate="attendance_history">Attendance History</h3>
+                            <div class="attendance-summary">
+                                <div class="summary-item">
+                                    <span data-translate="date">DATE</span>
+                                    <span data-translate="check_in">CHECK IN</span>
+                                    <span data-translate="status">STATUS</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>2024-01-15</span>
+                                    <span>09:00 AM</span>
+                                    <span class="status-present">Present</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>2024-01-14</span>
+                                    <span>08:45 AM</span>
+                                    <span class="status-present">Present</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <h3 data-translate="request_status">Request Status</h3>
+                            <div class="request-summary">
+                                <div class="summary-item">
+                                    <span data-translate="type">TYPE</span>
+                                    <span data-translate="date">DATE</span>
+                                    <span data-translate="status">STATUS</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Vacation</span>
+                                    <span>2024-01-20</span>
+                                    <span class="status-pending">Pending</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Complete JavaScript embedded
+        const translations = {
+            en: {
+                login: "Login",
+                employee_id: "Employee ID",
+                password: "Password",
+                property: "Property",
+                remember_me: "Remember me",
+                log_in: "Log In",
+                dashboard: "Dashboard",
+                check_in: "Check In",
+                vacation: "Vacation",
+                attendance_history: "Attendance History",
+                request_status: "Request Status",
+                welcome: "Welcome, John Doe",
+                check_out: "Check Out",
+                vacation_request: "Vacation Request",
+                from: "From",
+                to: "To",
+                submit_request: "Submit Request",
+                date: "DATE",
+                status: "STATUS",
+                type: "TYPE",
+                success_login: "Login successful! Welcome to SmartTrack.",
+                error_login: "Invalid credentials. Please try again.",
+                success_checkin: "Checked in successfully! Location recorded.",
+                success_checkout: "Checked out successfully! Have a great day!",
+                success_request: "Vacation request submitted successfully!",
+                error_location: "Location access required for check-in/out. Please allow location access."
+            },
+            ar: {
+                login: "تسجيل الدخول",
+                employee_id: "رقم الموظف",
+                password: "كلمة المرور",
+                property: "الممتلكات",
+                remember_me: "تذكرني",
+                log_in: "دخول",
+                dashboard: "لوحة التحكم",
+                check_in: "تسجيل الحضور",
+                vacation: "الإجازة",
+                attendance_history: "سجل الحضور",
+                request_status: "حالة الطلب",
+                welcome: "مرحباً، جون دو",
+                check_out: "تسجيل الانصراف",
+                vacation_request: "طلب إجازة",
+                from: "من",
+                to: "إلى",
+                submit_request: "إرسال الطلب",
+                date: "التاريخ",
+                status: "الحالة",
+                type: "النوع",
+                success_login: "تم تسجيل الدخول بنجاح! مرحباً بك في سمارت تراك",
+                error_login: "بيانات اعتماد غير صحيحة. يرجى المحاولة مرة أخرى.",
+                success_checkin: "تم تسجيل الحضور بنجاح! تم تسجيل الموقع.",
+                success_checkout: "تم تسجيل الانصراف بنجاح! نتمنى لك يوماً سعيداً!",
+                success_request: "تم إرسال طلب الإجازة بنجاح!",
+                error_location: "مطلوب الوصول للموقع لتسجيل الحضور/الانصراف. يرجى السماح بالوصول للموقع."
+            }
+        };
+
+        let currentLanguage = 'en';
+        let currentUser = null;
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            bindEvents();
+            showWelcomeMessage();
+        });
+
+        function showWelcomeMessage() {
+            setTimeout(() => {
+                showMessage('🌐 Welcome to SmartTrack Online Demo! Use the pre-filled credentials to login.', 'success');
+            }, 1000);
+        }
+
+        function bindEvents() {
+            // Login form
+            const loginForm = document.querySelector('.login-form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', handleLogin);
+            }
+
+            // Language buttons
+            const langButtons = document.querySelectorAll('.lang-btn');
+            langButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+                    setLanguage(lang);
+                });
+            });
+
+            // Navigation
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('[data-section]')) {
+                    e.preventDefault();
+                    const section = e.target.closest('[data-section]').getAttribute('data-section');
+                    showSection(section);
+                }
+            });
+
+            // Mobile menu toggle
+            const mobileToggle = document.querySelector('.mobile-menu-toggle');
+            if (mobileToggle) {
+                mobileToggle.addEventListener('click', () => toggleMobileMenu());
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            const employeeId = document.getElementById('employeeId').value;
+            const password = document.getElementById('password').value;
+            const property = document.getElementById('property').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+
+            // Show loading state
+            const submitBtn = e.target.querySelector('.btn-primary');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Logging in...';
+            submitBtn.disabled = true;
+
+            // Simulate API delay for realistic experience
+            setTimeout(() => {
+                // Mock authentication
+                if (authenticateUser(employeeId, password, property)) {
+                    if (rememberMe) {
+                        localStorage.setItem('smarttrack-credentials', JSON.stringify({
+                            employeeId,
+                            property
+                        }));
+                    }
+
+                    currentUser = {
+                        id: employeeId,
+                        name: getUserName(employeeId),
+                        property: property
+                    };
+
+                    showDashboard();
+                    showMessage(t('success_login'), 'success');
+                } else {
+                    showMessage(t('error_login'), 'error');
+                }
+
+                // Reset button state
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }, 1500);
+        }
+
+        function authenticateUser(employeeId, password, property) {
+            const validUsers = {
+                'EMP001': { password: 'password123', name: 'John Doe' },
+                'ADMIN001': { password: 'admin123', name: 'Administrator' },
+                'MGR001': { password: 'manager123', name: 'Property Manager' }
+            };
+
+            return validUsers[employeeId] && validUsers[employeeId].password === password && property;
+        }
+
+        function getUserName(employeeId) {
+            const users = {
+                'EMP001': 'John Doe',
+                'ADMIN001': 'Administrator',
+                'MGR001': 'Property Manager'
+            };
+            return users[employeeId] || 'User';
+        }
+
+        function showDashboard() {
+            document.getElementById('login-page').classList.remove('active');
+            document.getElementById('employee-dashboard').classList.add('active');
+            updateUserInfo();
+        }
+
+        function showSection(sectionId) {
+            // Navigation simulation - all sections show the same content for demo
+            showMessage(`Navigated to ${sectionId} section`, 'success');
+            closeMobileMenu();
+        }
+
+        function updateUserInfo() {
+            if (!currentUser) return;
+
+            const userInfoElements = document.querySelectorAll('.user-info span, [data-translate="welcome"]');
+            userInfoElements.forEach(el => {
+                if (currentLanguage === 'ar') {
+                    el.textContent = `مرحباً، ${currentUser.name}`;
+                } else {
+                    el.textContent = `Welcome, ${currentUser.name}`;
+                }
+            });
+        }
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update HTML direction
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.documentElement.lang = lang;
+            
+            // Update all translatable elements
+            updateTranslations();
+            updateLanguageButtons();
+        }
+
+        function updateTranslations() {
+            const elements = document.querySelectorAll('[data-translate]');
+            
+            elements.forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                    if (element.tagName === 'INPUT' && element.type !== 'submit') {
+                        element.placeholder = translations[currentLanguage][key];
+                    } else {
+                        element.textContent = translations[currentLanguage][key];
+                    }
+                }
+            });
+        }
+
+        function updateLanguageButtons() {
+            const langButtons = document.querySelectorAll('.lang-btn');
+            
+            langButtons.forEach(btn => {
+                const lang = btn.getAttribute('data-lang');
+                btn.classList.toggle('active', lang === currentLanguage);
+            });
+        }
+
+        function t(key) {
+            if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                return translations[currentLanguage][key];
+            }
+            return key;
+        }
+
+        function checkIn() {
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        showMessage(t('success_checkin'), 'success');
+                        addAttendanceRecord('check-in');
+                    },
+                    function(error) {
+                        // For demo, allow check-in even without location
+                        showMessage(t('success_checkin') + ' (Demo mode - location simulated)', 'success');
+                        addAttendanceRecord('check-in');
+                    }
+                );
+            } else {
+                // For demo, allow check-in even without geolocation
+                showMessage(t('success_checkin') + ' (Demo mode)', 'success');
+                addAttendanceRecord('check-in');
+            }
+        }
+
+        function checkOut() {
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        showMessage(t('success_checkout'), 'success');
+                        addAttendanceRecord('check-out');
+                    },
+                    function(error) {
+                        // For demo, allow check-out even without location
+                        showMessage(t('success_checkout') + ' (Demo mode - location simulated)', 'success');
+                        addAttendanceRecord('check-out');
+                    }
+                );
+            } else {
+                // For demo, allow check-out even without geolocation
+                showMessage(t('success_checkout') + ' (Demo mode)', 'success');
+                addAttendanceRecord('check-out');
+            }
+        }
+
+        function addAttendanceRecord(type) {
+            const now = new Date();
+            const dateStr = now.toISOString().split('T')[0];
+            const timeStr = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true 
+            });
+
+            // Find attendance summary and add new record
+            const attendanceContainer = document.querySelector('.attendance-summary');
+            if (attendanceContainer) {
+                const newRecord = document.createElement('div');
+                newRecord.className = 'summary-item';
+                newRecord.innerHTML = `
+                    <span>${dateStr}</span>
+                    <span>${timeStr}</span>
+                    <span class="status-present">${type === 'check-in' ? 'Check In' : 'Check Out'}</span>
+                `;
+                attendanceContainer.appendChild(newRecord);
+            }
+        }
+
+        function submitVacationRequest() {
+            const fromDate = document.getElementById('vacationFrom').value;
+            const toDate = document.getElementById('vacationTo').value;
+
+            if (!fromDate || !toDate) {
+                showMessage('Please select both dates', 'error');
+                return;
+            }
+
+            if (new Date(fromDate) > new Date(toDate)) {
+                showMessage('From date cannot be later than to date', 'error');
+                return;
+            }
+
+            showMessage(t('success_request'), 'success');
+            
+            // Clear form
+            document.getElementById('vacationFrom').value = '';
+            document.getElementById('vacationTo').value = '';
+
+            // Add to request status
+            const requestContainer = document.querySelector('.request-summary');
+            if (requestContainer) {
+                const newRequest = document.createElement('div');
+                newRequest.className = 'summary-item';
+                newRequest.innerHTML = `
+                    <span>Vacation</span>
+                    <span>${fromDate}</span>
+                    <span class="status-pending">Pending</span>
+                `;
+                requestContainer.appendChild(newRequest);
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('employee-dashboard').classList.remove('active');
+            document.getElementById('login-page').classList.add('active');
+            showMessage('Logged out successfully. Thank you for using SmartTrack!', 'success');
+        }
+
+        function showMessage(message, type = 'info') {
+            // Remove existing messages
+            const existingMessages = document.querySelectorAll('.message');
+            existingMessages.forEach(msg => msg.remove());
+
+            // Create message element
+            const messageEl = document.createElement('div');
+            messageEl.className = `message ${type}`;
+            messageEl.textContent = message;
+
+            // Insert message
+            const container = document.querySelector('.main-content') || document.querySelector('.login-form-section');
+            if (container) {
+                container.insertBefore(messageEl, container.firstChild);
+
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    messageEl.remove();
+                }, 5000);
+            }
+        }
+
+        function toggleMobileMenu() {
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) {
+                sidebar.classList.toggle('active');
+            }
+        }
+
+        function closeMobileMenu() {
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) {
+                sidebar.classList.remove('active');
+            }
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const sidebar = document.querySelector('.sidebar');
+            const mobileToggle = document.querySelector('.mobile-menu-toggle');
+            
+            if (sidebar && sidebar.classList.contains('active') && 
+                !sidebar.contains(e.target) && 
+                !mobileToggle.contains(e.target)) {
+                closeMobileMenu();
+            }
+        });
+
+        // Auto-set today's date for vacation form
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            const tomorrow = new Date(Date.now() + 24*60*60*1000).toISOString().split('T')[0];
+            
+            setTimeout(() => {
+                const fromDate = document.getElementById('vacationFrom');
+                const toDate = document.getElementById('vacationTo');
+                if (fromDate) fromDate.min = today;
+                if (toDate) toDate.min = today;
+            }, 100);
+        });
+    </script>
+</body>
+</html>
